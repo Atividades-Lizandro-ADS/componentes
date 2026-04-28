@@ -1,98 +1,141 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Alert } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { Avatar } from '@/components/Avatar';
+import { StatItem } from '@/components/StatItem';
+import { BotaoPerfil } from '@/components/BotaoPerfil';
+import { TagInteresse } from '@/components/TagInteresse';
+import { CardConquista } from '@/components/CardConquista';
 
-export default function HomeScreen() {
+const interesses = ['React Native', 'UI/UX', 'TypeScript', 'Mobile', 'Node.js'];
+
+const conquistas = [
+  {
+    emoji: '🏆',
+    titulo: 'Top Contribuinte',
+    descricao: 'Você postou 50 vezes este mês',
+    corIcone: '#FEF3C7',
+  },
+  {
+    emoji: '⭐',
+    titulo: 'Estrela em Ascensão',
+    descricao: '+500 seguidores em 30 dias',
+    corIcone: '#DBEAFE',
+  },
+];
+
+export default function PerfilScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <ScrollView style={styles.tela} contentContainerStyle={styles.conteudo}>
+      <Text style={styles.cabecalho}>Meu Perfil</Text>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <View style={styles.secaoAvatar}>
+        <Avatar iniciais="MS" tamanho={100} corFundo="#2D6A4F" verificado />
+        <Text style={styles.nome}>Maria Silva</Text>
+        <Text style={styles.cargo}>Desenvolvedora Mobile • IFRN</Text>
+        <Text style={styles.bio}>Apaixonada por React Native 🚀</Text>
+      </View>
+
+      <View style={styles.statsRow}>
+        <StatItem valor="248" rotulo="Posts" />
+        <View style={styles.statSpacer} />
+        <StatItem valor="1.2k" rotulo="Seguidores" />
+        <View style={styles.statSpacer} />
+        <StatItem valor="389" rotulo="Seguindo" />
+      </View>
+
+      <View style={styles.botoesRow}>
+        <BotaoPerfil
+          texto="Seguir"
+          variante="primario"
+          onPressar={() => Alert.alert('Seguindo Maria Silva!')}
+        />
+        <View style={styles.botaoSpacer} />
+        <BotaoPerfil
+          texto="Mensagem"
+          variante="secundario"
+          onPressar={() => Alert.alert('Abrindo mensagem...')}
+        />
+      </View>
+
+      <Text style={styles.secaoTitulo}>Interesses</Text>
+      <View style={styles.tagsContainer}>
+        {interesses.map((interesse) => (
+          <TagInteresse key={interesse} texto={interesse} />
+        ))}
+      </View>
+
+      <Text style={styles.secaoTitulo}>Conquistas recentes</Text>
+      {conquistas.map((conquista) => (
+        <CardConquista
+          key={conquista.titulo}
+          emoji={conquista.emoji}
+          titulo={conquista.titulo}
+          descricao={conquista.descricao}
+          corIcone={conquista.corIcone}
+        />
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  tela: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  conteudo: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+  cabecalho: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 24,
+  },
+  secaoAvatar: {
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 24,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  nome: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginTop: 12,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  cargo: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  bio: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  statSpacer: {
+    width: 10,
+  },
+  botoesRow: {
+    flexDirection: 'row',
+    marginBottom: 28,
+  },
+  botaoSpacer: {
+    width: 12,
+  },
+  secaoTitulo: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 12,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 20,
   },
 });
